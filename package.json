@@ -1,0 +1,35 @@
+{
+  "name": "crud-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "db-migrate --migrations-dir ./migrations",
+    "migrate:up": "npm run migrate up --config database.json",
+    "migrate:down": "npm run migrate down",
+    "migrate:reset": "npm run migrate reset",
+    "migrate:create": "npm run migrate create ",
+    "seed:create": "npm run migrate create:seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bluebird": "^3.7.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
+    "express": "^4.18.1",
+    "express-validation": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.20",
+    "pg-promise": "^10.12.0"
+  },
+  "devDependencies": {
+    "dot-env": "^0.0.1"
+  }
+}
