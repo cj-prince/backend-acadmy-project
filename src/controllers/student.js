@@ -44,10 +44,10 @@ const registerStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     let { id } = req.params;
-    let {address,dob, university,course_of_study,cgpa} = req.body;
+    let {address,dob, university,course_of_study,cgpa,cv,image,is_verified} = req.body;
     
     try {
-        const student = await db.oneOrNone(queries.updateStudent, [address,dob, university,course_of_study,cgpa,id])
+        const student = await db.oneOrNone(queries.updateStudent, [address,dob, university,course_of_study,cgpa,cv,image,is_verified,id])
         return res.status(200).json({
             status: 'Success',
             message: 'Student Updated',

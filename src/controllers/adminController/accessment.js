@@ -2,9 +2,9 @@ const db = require('../../config/config.js');
 const queries = require('../../queries/accessment_query');
 
 const createAccessment = async (req, res) => {
-    let {question,a_option,b_option,c_option,d_option,batch,duration,instructions,correct_answer} = req.body;
+    let {question,a_option,b_option,c_option,d_option,batch,duration,instructions,correct_answer,image} = req.body;
     try {
-        const accessmentForm= await db.none(queries.accessmentForm, [question,a_option,b_option,c_option,d_option,batch,duration,instructions,correct_answer])
+        const accessmentForm= await db.none(queries.accessmentForm, [question,a_option,b_option,c_option,d_option,batch,duration,instructions,correct_answer,image])
         console.log(accessmentForm)
         return res.status(200).json({
             status: 'Success',
@@ -37,9 +37,9 @@ const getAccessment = async(req, res) => {
 
 const updateAccessment = async (req, res) => {
     let { id } = req.params;
-    let {question,a_option,b_option,c_option, d_option, batch,duration,instruction,correct_answer} = req.body;
+    let {question,a_option,b_option,c_option, d_option, batch,duration,instruction,correct_answer,image} = req.body;
     try {
-        const accessmentForm = await db.any(queries.updateAccessment, [question,a_option,b_option,c_option, d_option, batch, duration,instruction,correct_answer, id])
+        const accessmentForm = await db.any(queries.updateAccessment, [question,a_option,b_option,c_option, d_option, batch, duration,instruction,correct_answer,image, id])
         return res.status(200).json({
             status: 'Success',
             message: 'Accessment Updated',

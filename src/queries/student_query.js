@@ -6,8 +6,8 @@ const queries = {
     `,
     updateStudent: `
         UPDATE students
-        SET address = $1,dob=$2,university = $3,course_of_study = $4,cgpa = $5
-        WHERE id = $6 RETURNING *
+        SET address = $1,dob=$2,university = $3,course_of_study = $4,cgpa = $5, cv =$6, image =$7,is_verified = $8
+        WHERE id = $9 RETURNING *
     `,
     getStudents: `SELECT * FROM students;`,
     getOneStudent: `SELECT * FROM students WHERE id = $1`,

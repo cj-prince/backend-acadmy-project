@@ -2,9 +2,9 @@ const db = require('../config/config.js');
 const queries = require('../queries/answerForm_query');
 
 const createForm = async (req, res) => {
-     let { student_answer, question_answer } = req.body;
+     let { question_id, student_answer, student_id } = req.body;
     try {
-        const answerForm= await db.any(queries.answerForm, [student_answer, question_answer])
+        const answerForm= await db.any(queries.answerForm, [question_id, student_answer, student_id ])
         return res.status(200).json({
             status: 'Success',
             message: 'form created',
@@ -36,9 +36,9 @@ const getForm = async(req, res) => {
 
 const updateForm = async (req, res) => {
     let { id } = req.params;
-    let {  student_answer, question_answer} = req.body;
+    let { student_answer, correct_answer, score} = req.body;
     try {
-        const answerForm = await db.any(queries.updateForm, [student_answer, question_answer, id])
+        const answerForm = await db.any(queries.updateForm, [student_answer, correct_answer, score, id])
         return res.status(200).json({
             status: 'Success',
             message: 'Form Updated',

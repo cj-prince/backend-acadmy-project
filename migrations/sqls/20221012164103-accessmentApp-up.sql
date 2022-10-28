@@ -12,8 +12,12 @@ CREATE TABLE students (
     university VARCHAR,
     course_of_study VARCHAR,
     cgpa INTEGER,
+    cv VARCHAR,
+    image VARCHAR,
+    is_verified DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    
 );
 
 CREATE TABLE admin (
@@ -44,12 +48,13 @@ CREATE TABLE questions (
 CREATE TABLE answer (
     id SERIAL PRIMARY KEY,
     question_id INTEGER REFERENCES questions(id),
-    option VARCHAR,
+    student_id INTEGER NOT NULL,
     student_answer VARCHAR,
-    question_answer VARCHAR,
+    correct_answer VARCHAR,
     score INTEGER DEFAULT 0, 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (student_id) REFERENCES students (id),
 );
 
 CREATE TABLE batch (

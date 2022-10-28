@@ -130,6 +130,8 @@ const adminLogin = async (req, res) => {
     }
 
 }
+
+
 module.exports = {
     fetchAdmin,
     registerAdmin ,
