@@ -12,6 +12,7 @@ CREATE TABLE students (
     university VARCHAR,
     course_of_study VARCHAR,
     cgpa INTEGER,
+    score INTEGER,
     cv VARCHAR,
     image VARCHAR,
     is_verified DEFAULT FALSE,
@@ -31,16 +32,12 @@ CREATE TABLE admin (
 
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
-    adminid INTEGER REFERENCES admin(id),
-    question VARCHAR NOT NULL,
-    a_option VARCHAR, 
-    b_option VARCHAR, 
-    c_option VARCHAR, 
-    d_option VARCHAR, 
+    question JSON, 
     batch INTEGER,
     duration VARCHAR,
     instructions VARCHAR,
     correct_answer VARCHAR,
+    image  VARCHAR,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -49,12 +46,12 @@ CREATE TABLE answer (
     id SERIAL PRIMARY KEY,
     question_id INTEGER REFERENCES questions(id),
     student_id INTEGER NOT NULL,
-    student_answer VARCHAR,
+    student_answer JSON,
     correct_answer VARCHAR,
     score INTEGER DEFAULT 0, 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    FOREIGN KEY (student_id) REFERENCES students (id),
+    FOREIGN KEY (student_id) REFERENCES students (id)
 );
 
 CREATE TABLE batch (

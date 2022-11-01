@@ -1,17 +1,22 @@
 const queries = {
     accessmentForm: `
-            INSERT INTO questions (question,a_option,b_option,c_option,d_option,batch,duration,instructions,correct_answer,image)
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9 ,$10) 
+            INSERT INTO questions (question,duration)
+            VALUES($1, $2) 
             RETURNING *;
     `,
     getAccessment: `SELECT * FROM questions;`,
     updateAccessment: `
         UPDATE questions
-        SET question = $1,a_option=$2,b_option=$3,c_option= $4, d_option = $5,batch= $6, duration = $7, instructions = $8, correct_answer = $9,image =$10
-        WHERE id = $11 RETURNING *
+        SET question = $1,batch= $2, duration = $3, instructions = $4, correct_answer = $5 , image = $6
+        WHERE id = $7 RETURNING *
     `,
     getOneAccessment: `SELECT * FROM questions WHERE id = $1`,
     deleteAccessment: `DELETE FROM questions WHERE id = $1`,
+    postImage:`
+        INSERT INTO questions (image)
+            VALUES($1) 
+             RETURNING *
+    `
 }
 
 module.exports = queries;

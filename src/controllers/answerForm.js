@@ -1,10 +1,10 @@
-const db = require('../config/config.js');
+const db = require('../public/config.js');
 const queries = require('../queries/answerForm_query');
 
 const createForm = async (req, res) => {
-     let { question_id, student_answer, student_id } = req.body;
+     let {student_id ,score} = req.body;
     try {
-        const answerForm= await db.any(queries.answerForm, [question_id, student_answer, student_id ])
+        const answerForm= await db.any(queries.answerForm, [student_id,score])
         return res.status(200).json({
             status: 'Success',
             message: 'form created',

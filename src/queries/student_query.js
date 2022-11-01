@@ -13,7 +13,10 @@ const queries = {
     getOneStudent: `SELECT * FROM students WHERE id = $1`,
     getStudentByEmail: `SELECT * FROM students WHERE email = $1`,
     deleteStudent: `DELETE FROM students WHERE id = $1`,
-    findByEmail: `SELECT email FROM students WHERE email = $1;`
+    findByEmail: `SELECT email FROM students WHERE email = $1;`,
+    updateScore:`
+        UPDATE students SET score = $1 WHERE id = $2 RETURNING *
+    `
 }
 
 module.exports = queries;

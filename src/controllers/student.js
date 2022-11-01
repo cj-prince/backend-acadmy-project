@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
-const db = require('../config/config.js');
+const db = require('../public/config.js');
 const queries = require('../queries/student_query');
 
 const fetchStudents = async (req, res) => {
@@ -53,7 +53,32 @@ const updateStudent = async (req, res) => {
             message: 'Student Updated',
             data: student
         })
+        
     } catch (err) {
+        console.log(err)
+        return err;
+    }
+}
+
+const updateOne = async(req,res) => {
+    let {id } = req.params;
+    let {score} = req.body;
+
+    try {
+        const idCheck = await db.oneOrNone(queries.getOneStudent,[id])
+        if (idCheck.length < 0) {
+            return res.status(400).json({
+                status: 'Failed',
+                message: 'id does not exists'
+            })
+        }
+        const student = await db.oneOrNone(queries.updateScore, [score])
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Score Added',
+            data: student
+        })
+    } catch (error) {
         console.log(err)
         return err;
     }
@@ -140,5 +165,6 @@ module.exports = {
     updateStudent,
     deleteStudent,
     getOneStudent,
-    login
+    login,
+    updateOne
 }

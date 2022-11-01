@@ -5,6 +5,7 @@ const accessment = require('../controllers/adminController/accessment');
 router.get('/accessment', accessment.getAccessment);
 router.get('/accessment/:id', accessment.getOneAccessment);
 router.post('/accessment', accessment.createAccessment);
+router.post('/accessment/image', accessment.postAccessmentImage);
 router.patch('/accessment/:id', accessment.updateAccessment);
 router.delete('/accessment/:id', accessment.deleteAccessment);
 

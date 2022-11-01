@@ -1,7 +1,7 @@
 const queries = {
     answerForm: `
-            INSERT INTO answer (question_id,student_answer, student_id)
-            VALUES ($1, $2, $3) 
+            INSERT INTO answer (student_id,score)
+            VALUES ($1, $2) 
             RETURNING *;
     `,
     getform: `SELECT * FROM answer;`,
