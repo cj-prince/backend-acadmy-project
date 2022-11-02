@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
-const db = require('../../public/config.js')
+const db = require('../../config/config.js')
 const queries = require('../../queries/admin_query')
 
 const fetchAdmin = async (req, res) => {

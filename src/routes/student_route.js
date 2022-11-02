@@ -8,6 +8,7 @@ router.post('/students', student.registerStudent);
 router.post('/students/login', student.login);
 router.put('/students/:id', student.updateStudent);
 router.patch('/students/update/:id', student.updateOne);
+router.patch('/students/verification/:id', student.updateVerfication);
 router.delete('/students/:id', student.deleteStudent);
 
 module.exports = router;

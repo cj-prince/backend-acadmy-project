@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
-const db = require('../public/config.js');
+const db = require('../config/config.js');
 const queries = require('../queries/student_query');
 
 const fetchStudents = async (req, res) => {
@@ -44,10 +44,10 @@ const registerStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     let { id } = req.params;
-    let {address,dob, university,course_of_study,cgpa,cv,image,is_verified} = req.body;
+    let {address,dob, university,course_of_study,cgpa,cv,image} = req.body;
     
     try {
-        const student = await db.oneOrNone(queries.updateStudent, [address,dob, university,course_of_study,cgpa,cv,image,is_verified,id])
+        const student = await db.oneOrNone(queries.updateStudent, [address,dob, university,course_of_study,cgpa,cv,image,id])
         return res.status(200).json({
             status: 'Success',
             message: 'Student Updated',
@@ -63,24 +63,50 @@ const updateStudent = async (req, res) => {
 const updateOne = async(req,res) => {
     let {id } = req.params;
     let {score} = req.body;
+    console.log(req.body)
 
     try {
-        const idCheck = await db.oneOrNone(queries.getOneStudent,[id])
-        if (idCheck.length < 0) {
-            return res.status(400).json({
-                status: 'Failed',
-                message: 'id does not exists'
-            })
-        }
-        const student = await db.oneOrNone(queries.updateScore, [score])
+        // const idCheck = await db.oneOrNone(queries.getOneStudent,[id])
+        // if (idCheck.length < 0) {
+        //     return res.status(400).json({
+        //         status: 'Failed',
+        //         message: 'id does not exists'
+        //     })
+        // }
+        const student = await db.any(queries.updateScore, [score,id])
         return res.status(200).json({
             status: 'Success',
             message: 'Score Added',
             data: student
         })
     } catch (error) {
-        console.log(err)
-        return err;
+        console.log(error)
+        return error;
+    }
+}
+
+const updateVerfication = async(req,res) => {
+    let {id } = req.params;
+    let {is_verified} = req.body;
+    console.log(req.body)
+
+    try {
+        // const idCheck = await db.oneOrNone(queries.getOneStudent,[id])
+        // if (idCheck.length < 0) {
+        //     return res.status(400).json({
+        //         status: 'Failed',
+        //         message: 'id does not exists'
+        //     })
+        // }
+        const student = await db.any(queries.updateVerified, [is_verified,id])
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Score Added',
+            data: student
+        })
+    } catch (error) {
+        console.log(error)
+        return error;
     }
 }
 
@@ -166,5 +192,6 @@ module.exports = {
     deleteStudent,
     getOneStudent,
     login,
-    updateOne
+    updateOne,
+    updateVerfication 
 }

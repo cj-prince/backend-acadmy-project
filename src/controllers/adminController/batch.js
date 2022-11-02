@@ -1,4 +1,4 @@
-const db = require('../../public/config.js');
+const db = require('../../config/config.js');
 const queries = require('../../queries/batch_query');
 
 const createBatch = async (req, res) => {

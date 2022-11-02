@@ -1,22 +1,18 @@
-const db = require('../../public/config.js');
+const db = require('../../config/config.js');
 const queries = require('../../queries/accessment_query');
 const cloudinary = require("cloudinary").v2;
-cloudinary.config = () => config({
-	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-	api_key: process.env.CLOUDINARY_API_KEY,
-	api_secret: process.env.CLOUDINARY_API_SECRET,
-})
 
-const CoverPhoto = async (req, res, next) => {
+
+const postAccessmentImage  = async (req, res, next) => {
   try {
-    const { filename: image } = req.file;
-    const { admin_id } = req.admin;
+     const { filename: image } = req.file;
+    const { question_id } = req.params;
     const newfilepath = `${req.file.destination}/resize/${image}`;
     await sharp(req.file.path)
       .resize({ width: 328, height: 328 })
       .png()
       .toFile(path.resolve(req.file.destination, "resize", image));
-    const response = await coverpage(req.file.path, admin_id, newfilepath);
+    const response = await coverpage(req.file.path, question_id, newfilepath);
     res.status(200).json({
       status: "success",
       message: "profile picture upload successfully",
@@ -28,19 +24,13 @@ const CoverPhoto = async (req, res, next) => {
   }
 };
 
-const coverpage = async (filepath, admin_id, newfilepath) => {
+const coverpage = async (filepath, question_id, newfilepath) => {
   const response = await cloudinary.uploader.upload(newfilepath, {
     folder: "enyata"
   });
   fs.unlinkSync(newfilepath);
   fs.unlinkSync(filepath);
-  await db.none(
-    admin_id,
-    {
-      cover_image_url: response.secure_url,
-    },
-    { new: true }
-  );
+  await db.none(queries.postImage, [response.secure_url, question_id])
   return response
 }
 
@@ -98,26 +88,26 @@ const updateAccessment = async (req, res) => {
     }
 }
 
-const postAccessmentImage = async(req, res) => {
-  let {image} = req.body;
-  const imageData = await cloudinary.uploader.upload(image)
-  console.log(imageData)
-  req.body.image = imageData.secure_url;
+// const postAccessmentImage = async(req, res) => {
+//   let {image} = req.body;
+//   const imageData = await cloudinary.uploader.upload(image)
+//   console.log(imageData)
+//   req.body.image = imageData.secure_url;
   
 
-  try {
+//   try {
       
-        const accessmentForm = await db.any(queries.postImage, [image])
-        return res.status(200).json({
-            status: 'Success',
-            message: 'Score Added',
-            data: accessmentForm
-        })
-  } catch (error) {
-    console.log(err)
-        return err;
-  }
-}
+//         const accessmentForm = await db.any(queries.postImage, [image])
+//         return res.status(200).json({
+//             status: 'Success',
+//             message: 'Score Added',
+//             data: accessmentForm
+//         })
+//   } catch (error) {
+//     console.log(err)
+//         return err;
+//   }
+// }
 
 const getOneAccessment = async (req, res) => {
   let { id } = req.params;

@@ -13,9 +13,9 @@ const queries = {
     getOneAccessment: `SELECT * FROM questions WHERE id = $1`,
     deleteAccessment: `DELETE FROM questions WHERE id = $1`,
     postImage:`
-        INSERT INTO questions (image)
-            VALUES($1) 
-             RETURNING *
+        UPDATE questions
+            SET image = $1 WHERE id = $2
+            RETURNING *
     `
 }
 

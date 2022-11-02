@@ -1,4 +1,4 @@
-const db = require('../public/config.js');
+const db = require('../config/config.js');
 const queries = require('../queries/answerForm_query');
 
 const createForm = async (req, res) => {
