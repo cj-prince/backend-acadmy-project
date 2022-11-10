@@ -21,7 +21,12 @@ const queries = {
     updateVerified:`
         UPDATE students SET is_verified = $1 WHERE id = $2 
         RETURNING *
-    `
+    `,
+    updatePassword: `
+        UPDATE students SET password=$1, 
+        WHERE email=$3 
+        RETURNING *
+      `,
 }
 
 module.exports = queries;

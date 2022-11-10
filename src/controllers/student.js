@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 const db = require('../config/config.js');
+const cloudinary = require('../config/cloudinary.js');
 const queries = require('../queries/student_query');
 
 const fetchStudents = async (req, res) => {
@@ -44,10 +45,21 @@ const registerStudent = async (req, res) => {
 
 const updateStudent = async (req, res) => {
     let { id } = req.params;
-    let {address,dob, university,course_of_study,cgpa,cv,image} = req.body;
+    let {address,dob, university,course_of_study,cgpa,cv,image} = req.body
     
     try {
-        const student = await db.oneOrNone(queries.updateStudent, [address,dob, university,course_of_study,cgpa,cv,image,id])
+        const cloudImage = await cloudinary.uploader.upload(image, {
+            folder: "enyata",
+            width: 300
+        })
+        const cloudCv = await cloudinary.uploader.upload(cv, {
+            folder: "studentcv",
+            resource_type: "auto"
+        })
+        cv = cloudCv.secure_url
+        image = cloudImage.secure_url
+        const student = await db.oneOrNone(queries.updateStudent, [address,dob, university,course_of_study,cgpa,cv,image
+        ,id])
         return res.status(200).json({
             status: 'Success',
             message: 'Student Updated',
@@ -185,6 +197,61 @@ const login = async (req, res) => {
 
 }
 
+const forgotPassword = async (req , res) => {
+    let {email} = req.body;
+    console.log(req.body)
+
+    const existingEmail = await db.any(queries.findByEmail, [email]);
+    if (existingEmail.length === 0) {
+        return res.status(400).json({
+            status: 'Failed',
+            message: 'Email does not exists'
+         })
+    }
+    const student = await db.oneOrNone(queries.getStudentByEmail, [email]);
+    const secret = process.env.JWT_SECRET_KEY + student.password
+
+    const payload = {
+        email: student.email,
+        id: student.id
+    }
+
+    const token = jwt.sign(payload, secret, {expiresIn:'15m'})
+    const link = `http://localhost:8080/#/resetpassword/${student.id}/${token}`
+    console.log (link)
+    res.send('password reset email sent')
+}
+
+const resetPassword = async (req, res) =>{
+    let {id , token} = req.params
+    let {password, email} = req.body;
+    console.log(req.body)
+    const idCheck = await db.oneOrNone(queries.getStudentByEmail, [email]);
+    if(id !==  idCheck.id){
+        return res.status(400).json({
+            status: 'Failed',
+            message: 'invalid id'
+         }) 
+    }
+    const student = await db.any(queries.updatePassword, [password, email]);
+    const secret = process.env.JWT_SECRET_KEY + student.password
+    try {
+        jwt.verify(token, secret)
+        student.password = password
+        password = bcrypt.hashSync(password, 10);
+        return res.status(200).json({
+            status: 'Success',
+            message: 'Student Added',
+            data: student
+        })
+    } catch (err) {
+        console.log(err)
+        return err
+    }
+
+
+}
+
 module.exports = {
     fetchStudents,
     registerStudent,
@@ -193,5 +260,7 @@ module.exports = {
     getOneStudent,
     login,
     updateOne,
-    updateVerfication 
+    updateVerfication,
+    forgotPassword,
+    resetPassword  
 }

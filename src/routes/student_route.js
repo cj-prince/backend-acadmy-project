@@ -10,5 +10,7 @@ router.put('/students/:id', student.updateStudent);
 router.patch('/students/update/:id', student.updateOne);
 router.patch('/students/verification/:id', student.updateVerfication);
 router.delete('/students/:id', student.deleteStudent);
+router.post('/students/forgotpassword', student.forgotPassword);
+router.put('/students/resetpassword', student.resetPassword)
 
 module.exports = router;
