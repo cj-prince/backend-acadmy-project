@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-
+const mg = require("mailgun-js");
 const db = require('../config/config.js');
 const cloudinary = require('../config/cloudinary.js');
 const queries = require('../queries/student_query');
+const dotenv = require('dotenv');
+dotenv.config()
 
 const fetchStudents = async (req, res) => {
     try {
@@ -54,7 +56,8 @@ const updateStudent = async (req, res) => {
         })
         const cloudCv = await cloudinary.uploader.upload(cv, {
             folder: "studentcv",
-            resource_type: "auto"
+            resource_type: "auto",
+            pages: true 
         })
         cv = cloudCv.secure_url
         image = cloudImage.secure_url
@@ -220,6 +223,26 @@ const forgotPassword = async (req , res) => {
     const link = `http://localhost:8080/#/resetpassword/${student.id}/${token}`
     console.log (link)
     res.send('password reset email sent')
+    const mailgun =  () => mg({
+        apiKey: process.env.SMTP_KEY,
+        domain: process.env.SMTP_DOMAIN
+    })
+
+    mailgun.messages().send({
+        from: 'Enyata <enyata.adcadmy.com>',
+        to: `${email}`,
+        subject:'reset password link sent',
+        html: `${link}`
+    }),
+    (error, body) => {
+        if(error){
+            console.log(error)
+            res.status(500).send({message: 'Error in sending email'})
+        }else{
+            console.log(body)
+            res.send({message: 'Email was sent successfully'})
+        }
+    }
 }
 
 const resetPassword = async (req, res) =>{
